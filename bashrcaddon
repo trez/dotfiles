@@ -1,0 +1,14 @@
+function docker-ps() {
+ docker ps -a --format "table {{ .Names }}\\t{{ .Status }}\\t{{ .Ports }}"
+}
+
+function docker-enter() {
+    CONTAINERS_=`docker-ps | grep $1 | awk '{ print $1 }'`
+
+    if [ $(echo -n $CONTAINERS_ | wc -w) -eq 1 ]; then
+      docker exec -ti $CONTAINERS_ bash
+    else
+      docker-ps
+    fi
+}
+
