@@ -16,13 +16,11 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.WindowNavigation (windowNavigation, Direction2D (..), Navigate (..) , navigateColor, configurableNavigation)
 import XMonad.Layout.IndependentScreens
+import XMonad.Layout.CenteredMaster
 
 -- import qualified XMonad.Util.XRandRUtils as UXRR
 import qualified XMonad.StackSet as W
 import qualified Data.Map as M
-
-laptopScreen = "eDP-1"
-workScreen   = "HDMI-1"
 
 colorBlack     = "#020202" --Background
 colorBlackAlt  = "#1c1c1c" --Black Xdefaults
@@ -49,11 +47,11 @@ main = xmonad . ewmh $ mateConfig
          , focusFollowsMouse  = False
          , handleEventHook    = fullscreenEventHook
          , startupHook        = setWMName "LG3D"
-         , borderWidth        = 5
+         , borderWidth        = 4
          , normalBorderColor  = colorBlackAlt
          , focusedBorderColor = colorWhiteAlt
          , layoutHook         = spacing 4
-                              $ gaps [(U, 26), (R, 4), (L, 4), (D, 8)]
+                              $ gaps [(U, 20), (R, 4), (L, 4), (D, 4)]
                               $ configurableNavigation (navigateColor colorBlackAlt)
                               $ layoutHook
                               $ mateConfig
@@ -75,22 +73,11 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm, xK_3), windows (onCurrentScreen W.greedyView "3"))
                    , ((modm, xK_4), windows (onCurrentScreen W.greedyView "4"))
                    , ((modm, xK_5), windows (onCurrentScreen W.greedyView "5"))
---                   , ((modm, xK_q), windows (onCurrentScreen W.greedyView "6"))
---                   , ((modm, xK_w), windows (onCurrentScreen W.greedyView "7"))
---                   , ((modm, xK_e), windows (onCurrentScreen W.greedyView "8"))
---                   , ((modm, xK_r), windows (onCurrentScreen W.greedyView "9"))
                      -- window handling
-                 --  , ((modm, xK_h), sendMessage $ Go L)
-                 --  , ((modm, xK_l), sendMessage $ Go R)
-                 --  , ((modm, xK_j), sendMessage $ Go D)
-                 --  , ((modm, xK_k), sendMessage $ Go U)
                    , ((modm, xK_a), sendMessage $ Go L)
                    , ((modm, xK_d), sendMessage $ Go R)
                    , ((modm, xK_s), sendMessage $ Go D)
                    , ((modm, xK_w), sendMessage $ Go U)
-
-                   , ((modm, xK_o), spawn "/home/tobias/layoutswitcher.sh")
-
                    , ((modm, xK_q), sendMessage $ Shrink)
                    , ((modm, xK_e), sendMessage $ Expand)
                    , ((modm, xK_g ), withFocused toggleBorder)
@@ -99,6 +86,11 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm .|. shiftMask, xK_m    ), tagToEmptyWorkspace)
                    , ((modm,               xK_Down),  CWS.nextWS)
                    , ((modm,               xK_Up),    CWS.prevWS)
+                     -- Handle floating windows.
+                   , ((modm,               xK_r    ), withFocused $ windows . (flip W.float) (W.RationalRect (1/10) (1/10) (8/10) (8/10)))
+                   , ((modm,               xK_f    ), windows (actionCurrentFloating W.focusWindow))
+                   , ((modm,               xK_t    ), withFocused $ windows . W.sink)
+                   , ((modm .|. shiftMask, xK_a    ), windows (actionCurrentFloating W.sink))
                      -- screen handling
                    , ((modm, xK_space),               CWS.nextScreen)
                    , ((modm .|. shiftMask, xK_space), CWS.shiftNextScreen)
@@ -112,26 +104,13 @@ main = xmonad . ewmh $ mateConfig
                    --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
                      --take a screenshot of focused window
                    , ((modm .|. controlMask, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
---                   , ((modm, xK_z .|. shiftMask),     toggleDisplay workScreen)
---                   , ((modm, xK_x .|. shiftMask),     toggleDisplay laptopScreen)
                    ]
              in \c -> myKeys c `M.union` keys mateConfig c
          }
---   where
---     toggledisplay d = do
---         UXRR.getXRRConnStatus d >>= \ case
---             Nothing               -> pure ()  -- no such output
---             Just (UXRR.XCSOff   ) -> pure ()  -- nothing there to turn on
---             Just (UXRR.XCSDiscon) -> off
---             Just (UXRR.XCSConn  ) -> spawn $ "xrandr --output " ++ d ++ " --auto --right-of " ++ laptopScreen
---             Just (UXRR.XCSEna   ) -> off
---     off = spawn $ "xrandr --output " ++ d ++ " --off"
 
-
--- onOtherScreen f vws = W.screen . W.current >>= f . flip marshall vws
-
--- onLaptopScreen f vws = W.screen . (!!0) . W.screens >>= f. flip marshall vws
--- onBigScreen f vws = W.screen . (!!1) . W.screens >>= f. flip marshall vws
-
-
--- onLaptopScreen = CWS.screenBy 1
+actionCurrentFloating :: (Eq s, Eq a, Eq i, Ord a) => (a -> W.StackSet i l a s sd -> W.StackSet i l a s sd) -> W.StackSet i l a s sd -> W.StackSet i l a s sd
+actionCurrentFloating f s = findFloatingInCurrentStack (W.index s) (W.floating s)
+  where
+    findFloatingInCurrentStack ([]) fm = s
+    findFloatingInCurrentStack (c:cs) fm =
+      if (M.member (c) fm) then f c s else findFloatingInCurrentStack cs fm
