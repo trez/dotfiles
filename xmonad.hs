@@ -16,7 +16,7 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.WindowNavigation (windowNavigation, Direction2D (..), Navigate (..) , navigateColor, configurableNavigation)
 import XMonad.Layout.IndependentScreens
-import XMonad.Layout.CenteredMaster
+import XMonad.Layout.Minimize
 
 -- import qualified XMonad.Util.XRandRUtils as UXRR
 import qualified XMonad.StackSet as W
@@ -40,6 +40,17 @@ colorRedAlt    = "#e0105f"
 colorGreen     = "#66ff66"
 colorGreenAlt  = "#558965"
 
+myLayout = minimize tiled ||| minimize(Mirror tiled) ||| minimize Full
+  where
+     -- default tiling algorithm partitions the screen into two panes
+     tiled   = Tall nmaster delta ratio
+     -- The default number of windows in the master pane
+     nmaster = 1
+     -- Default proportion of screen occupied by master pane
+     ratio   = 1/2
+     -- Percent of screen to increment by when resizing panes
+     delta   = 3/100
+
 main = xmonad . ewmh $ mateConfig
          { modMask            = mod4Mask
          , workspaces         = withScreens 2 (map show [1..9])
@@ -53,8 +64,7 @@ main = xmonad . ewmh $ mateConfig
          , layoutHook         = spacing 4
                               $ gaps [(U, 20), (R, 4), (L, 4), (D, 4)]
                               $ configurableNavigation (navigateColor colorBlackAlt)
-                              $ layoutHook
-                              $ mateConfig
+                              $ myLayout
          , manageHook         =
              let isSplash = isInProperty "_NET_WM_WINDOW_TYPE"
                                          "_NET_WM_WINDOW_TYPE_SPLASH"
@@ -84,8 +94,10 @@ main = xmonad . ewmh $ mateConfig
                      -- Find empty workspace
                    , ((modm,               xK_m    ), viewEmptyWorkspace)
                    , ((modm .|. shiftMask, xK_m    ), tagToEmptyWorkspace)
-                   , ((modm,               xK_Down),  CWS.nextWS)
-                   , ((modm,               xK_Up),    CWS.prevWS)
+                   , ((modm,               xK_n    ), withFocused minimizeWindow)
+                   , ((modm .|. shiftMask, xK_n    ), sendMessage RestoreNextMinimizedWin)
+                   , ((modm,               xK_Down ), CWS.nextWS)
+                   , ((modm,               xK_Up   ), CWS.prevWS)
                      -- Handle floating windows.
                    , ((modm,               xK_r    ), withFocused $ windows . (flip W.float) (W.RationalRect (1/10) (1/10) (8/10) (8/10)))
                    , ((modm,               xK_f    ), windows (actionCurrentFloating W.focusWindow))
