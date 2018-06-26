@@ -102,7 +102,7 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm,               xK_r    ), withFocused $ windows . (flip W.float) (W.RationalRect (1/10) (1/10) (8/10) (8/10)))
                    , ((modm,               xK_f    ), windows (actionCurrentFloating W.focusWindow))
                    , ((modm,               xK_t    ), withFocused $ windows . W.sink)
-                   , ((modm .|. shiftMask, xK_a    ), windows (actionCurrentFloating W.sink))
+                   , ((modm .|. shiftMask, xK_t    ), windows (actionCurrentFloating W.sink))
                      -- screen handling
                    , ((modm, xK_space),               CWS.nextScreen)
                    , ((modm .|. shiftMask, xK_space), CWS.shiftNextScreen)
