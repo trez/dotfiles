@@ -1,0 +1,11 @@
+Config files.
+--------------------------------
+init.vim  -> ~/.config/nvim/init.vim     | Neovim config.
+gtk.css   -> ~/.config/gtk-3.0/gtk.css   | For terminal padding.
+xmonad.hs -> ~/.xmonad/xmonad.hs         | Window manager config.
+
+
+Good to have Projects
+--------------------------------
+https://github.com/ryanoasis/nerd-fonts  | Symbols and patched fonts.
+https://github.com/powerline/fonts       | Powerline patched fonts.
