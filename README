@@ -7,5 +7,6 @@ xmonad.hs -> ~/.xmonad/xmonad.hs         | Window manager config.
 
 Good to have Projects
 --------------------------------
-https://github.com/ryanoasis/nerd-fonts  | Symbols and patched fonts.
-https://github.com/powerline/fonts       | Powerline patched fonts.
+https://github.com/ryanoasis/nerd-fonts    | Symbols and patched fonts.
+https://github.com/powerline/fonts         | Powerline patched fonts.
+https://github.com/Corwind/termite-install | Installation script for terminal.
