@@ -62,7 +62,7 @@ main = xmonad . ewmh $ mateConfig
          , normalBorderColor  = colorBlackAlt
          , focusedBorderColor = colorWhiteAlt
          , layoutHook         = spacing 4
-                              $ gaps [(U, 20), (R, 4), (L, 4), (D, 4)]
+                              $ gaps [(U, 30), (R, 4), (L, 4), (D, 4)]
                               $ configurableNavigation (navigateColor colorBlackAlt)
                               $ myLayout
          , manageHook         =
@@ -91,6 +91,7 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm, xK_q), sendMessage $ Shrink)
                    , ((modm, xK_e), sendMessage $ Expand)
                    , ((modm, xK_g ), withFocused toggleBorder)
+                   , ((modm .|. shiftMask, xK_q), setLayout $ XMonad.layoutHook conf)
                      -- Find empty workspace
                    , ((modm,               xK_m    ), viewEmptyWorkspace)
                    , ((modm .|. shiftMask, xK_m    ), tagToEmptyWorkspace)
