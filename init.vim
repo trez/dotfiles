@@ -55,6 +55,7 @@ Plug 'jaxbot/semantic-highlight.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-colorscheme-switcher'
+Plug 'crusoexia/vim-monokai'
 " Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
 
 function! DoRemote(arg)
@@ -153,7 +154,8 @@ set relativenumber
 set number
 let mapleader=','
 set backspace=2
-colorscheme heroku
+colorscheme monokai
+set background=dark
 syntax on
 set shell=/bin/bash
 set laststatus=2
