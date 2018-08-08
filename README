@@ -1,8 +1,9 @@
 Config files.
 --------------------------------
-init.vim  -> ~/.config/nvim/init.vim     | Neovim config.
-gtk.css   -> ~/.config/gtk-3.0/gtk.css   | For terminal padding.
-xmonad.hs -> ~/.xmonad/xmonad.hs         | Window manager config.
+init.vim  -> ~/.config/nvim/init.vim       | Neovim config.
+gtk.css   -> ~/.config/gtk-3.0/gtk.css     | For terminal padding.
+xmonad.hs -> ~/.xmonad/xmonad.hs           | Window manager config.
+termite.config -> ~/.config/termite/config | Terminal font and color settings.
 
 
 Good to have Projects
