@@ -4,8 +4,11 @@ mkdir -p ~/.config/nvim
 mkdir -p ~/.config/gtk-3.0
 mkdir -p ~/.config/termite
 mkdir -p ~/.xmonad
+mkdir -p ~/.cmus
 
 ln -fsT $SCRIPT_DIR/init.vim ~/.config/nvim/init.vim
 ln -fsT $SCRIPT_DIR/gtk.css ~/.config/gtk-3.0/gtk.css
 ln -fsT $SCRIPT_DIR/xmonad.hs ~/.xmonad/xmonad.hs
 ln -fsT $SCRIPT_DIR/termite.config ~/.config/termite/config
+ln -fsT $SCRIPT_DIR/cmus.rc ~/.cmus/rc
+ln -fsT $SCRIPT_DIR/cmus.monokai ~/.cmus/monokai.theme
