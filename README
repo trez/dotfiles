@@ -1,10 +1,13 @@
 Config files.
 --------------------------------
-init.vim  -> ~/.config/nvim/init.vim       | Neovim config.
-gtk.css   -> ~/.config/gtk-3.0/gtk.css     | For terminal padding.
-xmonad.hs -> ~/.xmonad/xmonad.hs           | Window manager config.
-termite.config -> ~/.config/termite/config | Terminal font and color settings.
-
+init.vim       | Neovim config.
+gtk.css        | For terminal padding.
+xmonad.hs      | Window manager config.
+termite.config | Terminal font and color settings.
+cmus.rc        | Music player config.
+cmus.monokai   | Music player colorscheme.
+Xmodmap        | Modifying keymapping.
+xinitrc        | Run on startup of X.
 
 Good to have Projects
 --------------------------------
