@@ -56,7 +56,7 @@ Plug 'flazz/vim-colorschemes'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-colorscheme-switcher'
 Plug 'crusoexia/vim-monokai'
-" Plug 'awetzel/elixir.nvim', { 'do': 'yes \| ./install.sh' }
+Plug 'davidhalter/jedi-vim'  " Python autocompletion
 
 function! DoRemote(arg)
   UpdateRemotePlugins
