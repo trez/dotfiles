@@ -19,6 +19,7 @@ RESET=$(tput sgr0)
 BLUE=$(tput setaf 4)
 GREY=$(tput setaf 244)
 RED=$(tput setaf 1)
+GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 
 git_prompt() {
@@ -29,6 +30,8 @@ git_prompt() {
 
     if [ ! -z "$(git status --short)" ]; then
       echo " ${RED}✗"
+    else
+      echo " ${GREEN}✓"
     fi
   fi
 }
