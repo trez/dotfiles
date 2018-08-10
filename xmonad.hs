@@ -108,7 +108,8 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm, xK_space),               CWS.nextScreen)
                    , ((modm .|. shiftMask, xK_space), CWS.shiftNextScreen)
                      -- xmonad handling
-                   , ((modm,               xK_l), spawn "mate-screensaver-command -l")
+                   , ((modm,               xK_c), spawn "cmus-remote -u")
+                   , ((modm,               xK_l), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
                    , ((modm .|. shiftMask, xK_l), broadcastMessage ReleaseResources >> restart "xmonad" True)
                    , ((modm,               xK_v), sendMessage NextLayout)
                    , ((modm .|. shiftMask, xK_v), setLayout $ XMonad.layoutHook conf)
