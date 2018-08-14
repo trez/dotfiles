@@ -35,8 +35,15 @@ git_prompt() {
       GIT_PROMPT="${GIT_PROMPT} \[${GREEN}\]✓"
     fi
   fi
-  PS1="\u:\[$BLUE\]\w${GIT_PROMPT} \[$GREY\]$ \[$RESET\]"
+
+  # python virtualenv prompt
+  VE_PROMPT=""
+  if [ ! -z $VIRTUAL_ENV ]; then
+      VE_PROMPT="(\[\$GREEN\]$(basename $VIRTUAL_ENV)\[$RESET\]) "
+  fi
+  PS1="${VE_PROMPT}\u:\[$BLUE\]\w${GIT_PROMPT} \[$GREY\]$ \[$RESET\]"
 }
+
 PROMPT_COMMAND=git_prompt
 
 export TERM=xterm-256color
