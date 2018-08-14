@@ -1,4 +1,5 @@
-# Config files.
+# trez' dotfiles
+## Config files.
 | File           | Description                        |
 | -------------- | ---------------------------------- |
 | init.vim       | Neovim config.                     |
@@ -10,7 +11,7 @@
 | Xmodmap        | Modifying keymapping.              |
 | xinitrc        | Run on startup of X.               |
 
-# Good to have Projects
+## Good to have Projects
 | repo                                       | description                       |
 | ------------------------------------------ | --------------------------------- |
 | https://github.com/ryanoasis/nerd-fonts    | Symbols and patched fonts.        |
@@ -19,6 +20,6 @@
 | https://github.com/khamer/base16-termite   | Themes for termite.               |
 | https://github.com/chriskempson/base16     | Nice theme project.               |
 
-# Screenshots
+## Screenshots
 * My terminal with git and virtualenv info showing in prompt:
    ![Screenshot of terminal](https://raw.githubusercontent.com/trez/dotfiles/master/screenshots/prompt.png "Screenshot of terminal")
