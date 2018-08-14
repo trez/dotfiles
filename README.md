@@ -18,3 +18,7 @@
 | https://github.com/Corwind/termite-install | Installation script for terminal. |
 | https://github.com/khamer/base16-termite   | Themes for termite.               |
 | https://github.com/chriskempson/base16     | Nice theme project.               |
+
+# Screenshots
+* My terminal with git and virtualenv info showing in prompt:
+   ![Screenshot of terminal](https://raw.githubusercontent.com/trez/dotfiles/master/screenshots/prompt.png "Screenshot of terminal")
