@@ -23,16 +23,28 @@ GREEN=$(tput setaf 2)
 YELLOW=$(tput setaf 3)
 
 git_prompt() {
+  GIT_PROMPT=""
   BRANCH=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/*\(.*\)/\1/')
 
   if [ ! -z $BRANCH ]; then
-    echo -n "$YELLOW$BRANCH"
+    GIT_PROMPT="\[$YELLOW\]$BRANCH"
 
     if [ ! -z "$(git status --short)" ]; then
-      echo " ${RED}✗"
+      GIT_PROMPT="${GIT_PROMPT} \[${RED}\]✗"
     else
-      echo " ${GREEN}✓"
+      GIT_PROMPT="${GIT_PROMPT} \[${GREEN}\]✓"
     fi
   fi
+  PS1="\u:\[$BLUE\]\w${GIT_PROMPT} \[$GREY\]$ \[$RESET\]"
 }
-PS1='\u:$BLUE\w$(git_prompt) $GREY$ $RESET'
+PROMPT_COMMAND=git_prompt
+
+export TERM=xterm-256color
+
+PATH=$PATH:~/.local/bin
+
+# Nice tools for python virtualenvs.
+source ~/.local/bin/virtualenvwrapper.sh
+
+# Disable ^D, but 11th time will actually cause exit.
+set -o ignoreeof
