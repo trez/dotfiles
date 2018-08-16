@@ -155,6 +155,7 @@ set number
 let mapleader=','
 set backspace=2
 colorscheme monokai
+let g:airline_theme='base16_monokai'
 set background=dark
 syntax on
 set shell=/bin/bash
