@@ -14,7 +14,7 @@ import XMonad.Layout.Spacing
 import XMonad.Layout.Gaps
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.LayoutHints
-import XMonad.Layout.WindowNavigation (windowNavigation, Direction2D (..), Navigate (..) , navigateColor, configurableNavigation)
+import XMonad.Layout.WindowNavigation (Direction2D (..), Navigate (..) , configurableNavigation, navigateColor)
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.Minimize
 
@@ -59,11 +59,11 @@ main = xmonad . ewmh $ mateConfig
          , handleEventHook    = fullscreenEventHook
          , startupHook        = setWMName "LG3D"
          , borderWidth        = 4
-         , normalBorderColor  = colorBlackAlt
-         , focusedBorderColor = colorWhiteAlt
+         , normalBorderColor  = "#75715e"
+         , focusedBorderColor = "#f4bf75"
          , layoutHook         = spacing 4
                               $ gaps [(U, 30), (R, 4), (L, 4), (D, 4)]
-                              $ configurableNavigation (navigateColor colorBlackAlt)
+                              $ configurableNavigation (navigateColor "#75715e")
                               $ myLayout
          , manageHook         =
              let isSplash = isInProperty "_NET_WM_WINDOW_TYPE"
