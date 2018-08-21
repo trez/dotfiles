@@ -1,7 +1,7 @@
 
 let mapleader=","
-set directory=~/.vim/backup
-set backupdir=~/.vim/backup   " keep swap files here
+set directory=~/.config/nvim/backup
+set backupdir=~/.config/nvim/backup   " keep swap files here
 filetype off                  " required
 
 set t_Co=256
