@@ -57,7 +57,6 @@ main = xmonad . ewmh $ mateConfig
          , terminal           = "termite"
          , focusFollowsMouse  = False
          , handleEventHook    = fullscreenEventHook
-         , startupHook        = setWMName "LG3D"
          , borderWidth        = 4
          , normalBorderColor  = "#75715e"
          , focusedBorderColor = "#f4bf75"
