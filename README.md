@@ -1,4 +1,5 @@
 # trez' dotfiles
+![terminal](https://raw.githubusercontent.com/trez/dotfiles/master/screenshots/terminal-20180821.png "terminal")
 ## Config files.
 | File           | Description                        |
 | -------------- | ---------------------------------- |
