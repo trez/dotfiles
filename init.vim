@@ -54,9 +54,11 @@ Plug 'junegunn/limelight.vim'
 Plug 'jaxbot/semantic-highlight.vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-colorscheme-switcher'
+" Plug 'xolox/vim-colorscheme-switcher'
 Plug 'crusoexia/vim-monokai'
 Plug 'davidhalter/jedi-vim'  " Python autocompletion
+" Plug 'python-mode/python-mode', { 'branch': 'develop' } " More python shit
+Plug 'majutsushi/tagbar' " Ctags browser tool.
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -297,15 +299,21 @@ command! VimColorTest call VimColorTest('vim-color-test.tmp', 256, 16)
 
 set mouse=v
 
-" " Copy to clipboard
+" Copy to clipboard
 vnoremap  <leader>y  "+y
 nnoremap  <leader>Y  "+yg_
 nnoremap  <leader>y  "+y
 nnoremap  <leader>yy  "+yy
 
-" " Paste from clipboard
+" Paste from clipboard
 nnoremap <leader>p "+p
 nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
 
+" Tagbar configuration.
+nmap <F8> :TagbarToggle<CR>
+let g:tagbar_vertical = 30
+let g:tagbar_sort = 0
+let g:tagbar_compact = 1
+let g:tagbar_show_linenumbers = 1
