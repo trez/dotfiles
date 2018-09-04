@@ -1,16 +1,17 @@
 # trez' dotfiles
 ![terminal](https://raw.githubusercontent.com/trez/dotfiles/master/screenshots/terminal-20180821.png "terminal")
 ## Config files.
-| File           | Description                        |
-| -------------- | ---------------------------------- |
-| init.vim       | Neovim config.                     |
-| gtk.css        | For terminal padding.              |
-| xmonad.hs      | Window manager config.             |
-| termite.config | Terminal font and color settings.  |
-| cmus.rc        | Music player config.               |
-| cmus.monokai   | Music player colorscheme.          |
-| Xmodmap        | Modifying keymapping.              |
-| xinitrc        | Run on startup of X.               |
+| File           | Description                         |
+| -------------- | ----------------------------------- |
+| init.vim       | Neovim config.                      |
+| gtk.css        | For terminal padding.               |
+| xmonad.hs      | Window manager config.              |
+| termite.config | Terminal font and color settings.   |
+| cmus.rc        | Music player config.                |
+| cmus.monokai   | Music player colorscheme.           |
+| Xmodmap        | Modifying keymapping.               |
+| xinitrc        | Run on startup of X.                |
+| curlrc         | Commandline tool for data transfer. |
 
 ## Good to have Projects
 | repo                                       | description                       |

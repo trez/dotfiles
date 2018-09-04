@@ -18,6 +18,7 @@ ln -fsT $SCRIPT_DIR/cmus.rc ~/.config/cmus/rc
 ln -fsT $SCRIPT_DIR/cmus.monokai ~/.config/cmus/monokai.theme
 ln -fsT $SCRIPT_DIR/Xmodmap ~/.Xmodmap
 ln -fsT $SCRIPT_DIR/xinitrc ~/.xinitrc
+ln -fsT $SCRIPT_DIR/curlrc ~/.curlrc
 
 # Needs to be an executable by xinit.
 chmod +x $SCRIPT_DIR/xinitrc
