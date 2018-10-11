@@ -59,6 +59,8 @@ Plug 'crusoexia/vim-monokai'
 Plug 'davidhalter/jedi-vim'  " Python autocompletion
 " Plug 'python-mode/python-mode', { 'branch': 'develop' } " More python shit
 Plug 'majutsushi/tagbar' " Ctags browser tool.
+Plug 'robbles/logstash.vim'
+Plug 'rbgrouleff/bclose.vim' " Delete buffer without effecting window setup.
 
 function! DoRemote(arg)
   UpdateRemotePlugins
@@ -317,3 +319,5 @@ let g:tagbar_vertical = 30
 let g:tagbar_sort = 0
 let g:tagbar_compact = 1
 let g:tagbar_show_linenumbers = 1
+
+hi Normal ctermbg=none guibg=none
