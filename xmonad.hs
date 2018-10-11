@@ -113,6 +113,7 @@ main = xmonad . ewmh $ mateConfig
                    , ((modm,               xK_v), sendMessage NextLayout)
                    , ((modm .|. shiftMask, xK_v), setLayout $ XMonad.layoutHook conf)
                    , ((modm,               xK_p), spawn "synapse")
+                   , ((modm,               xK_o), spawn "~/.xinitrc")
                      --take a screenshot of entire display
                    --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
                      --take a screenshot of focused window
