@@ -168,6 +168,7 @@ set noshowmode
 
 nmap <C-h> :bprev<CR> " Move to the tab to the left
 nmap <C-l> :bnext<CR> " Move to the tab to the right
+nmap <F4> o<ESC>p " Paste on new line.
 
 " Check the function above, these
 " are my default values
@@ -312,6 +313,17 @@ nnoremap <leader>p "+p
 nnoremap <leader>P "+P
 vnoremap <leader>p "+p
 vnoremap <leader>P "+P
+
+" Go to buffer 1/2/...
+nnoremap <Leader>1 :1b<CR>
+nnoremap <Leader>2 :2b<CR>
+nnoremap <Leader>3 :3b<CR>
+nnoremap <Leader>4 :4b<CR>
+nnoremap <Leader>5 :5b<CR>
+nnoremap <Leader>6 :6b<CR>
+nnoremap <Leader>7 :7b<CR>
+nnoremap <Leader>8 :8b<CR>
+nnoremap <Leader>9 :9b<CR>
 
 " Tagbar configuration.
 nmap <F8> :TagbarToggle<CR>
