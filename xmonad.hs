@@ -84,7 +84,7 @@ myLayout = id
     $ avoidStruts
 --    $ gaps [(U, 4), (R, 4), (L, 4), (D, 4)]
     $ configurableNavigation (navigateColor myInactiveColor)
-    $ tiled2 ||| Mirror tiled |||tabs
+    $ tiled2 ||| tiledMirror |||tabs
   where
     addTopBar = noFrillsDeco shrinkText myTopBarTheme
 --    addTopBar = simpleDeco shrinkText myTopBarTheme
@@ -95,6 +95,12 @@ myLayout = id
 --           $ spacing 4
            $ addTopBar
            $ tiled
+
+    tiledMirror = avoidStruts
+                $ minimize
+                $ windowNavigation
+                $ addTopBar
+                $ Mirror tiled
 
     tabs = avoidStruts
          $ minimize
