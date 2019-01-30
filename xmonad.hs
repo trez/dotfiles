@@ -27,7 +27,7 @@ import XMonad.Layout.Tabbed (addTabs, tabbed)
 import XMonad.Layout.Fullscreen (fullscreenEventHook)
 -- import XMonad.Layout.LayoutHints
 import XMonad.Layout.WindowNavigation (Direction2D(..), Navigate(..) , configurableNavigation, navigateColor, windowNavigation)
-import XMonad.Layout.IndependentScreens (onCurrentScreen, withScreens)
+import XMonad.Layout.IndependentScreens (onCurrentScreen, withScreens, countScreens)
 import XMonad.Layout.Minimize (minimize)
 
 import qualified XMonad.StackSet as W
@@ -119,89 +119,91 @@ myLayout = id
     delta   = 3/100
 
 
-main = xmonad . debugManageHook . ewmh $ mateConfig
-         { modMask            = mod4Mask
-         , workspaces         = withScreens 2 (map show [1..9])
-         , terminal           = "termite"
-         , focusFollowsMouse  = False
-         , handleEventHook    = fullscreenEventHook
-         , borderWidth        = 1
-         , normalBorderColor  = myInactiveColor
-         , focusedBorderColor = myActiveColor
-         , layoutHook         = myLayout
-         , manageHook         =
-             let isSplash = isInProperty "_NET_WM_WINDOW_TYPE"
-                                         "_NET_WM_WINDOW_TYPE_SPLASH"
-             in manageHook mateConfig <+> composeAll
-                  [ resource  =? "Do"  --> doIgnore
-                  , className =? "Do"  --> doIgnore
-                  , isFullscreen       --> doFullFloat
-                  , isSplash           --> doIgnore
-                  ]
+main = do
+    numScreens <- countScreens
+    xmonad . ewmh $ mateConfig
+      { modMask            = mod4Mask
+      , workspaces         = withScreens numScreens (map show [1..9])
+      , terminal           = "termite"
+      , focusFollowsMouse  = False
+      , handleEventHook    = fullscreenEventHook
+      , borderWidth        = 1
+      , normalBorderColor  = myInactiveColor
+      , focusedBorderColor = myActiveColor
+      , layoutHook         = myLayout
+      , manageHook         =
+          let isSplash = isInProperty "_NET_WM_WINDOW_TYPE"
+                                      "_NET_WM_WINDOW_TYPE_SPLASH"
+          in manageHook mateConfig <+> composeAll
+               [ resource  =? "Do"  --> doIgnore
+               , className =? "Do"  --> doIgnore
+               , isFullscreen       --> doFullFloat
+               , isSplash           --> doIgnore
+               ]
 
-         , keys =
-             let myKeys conf@(X.XConfig {modMask = modm}) = M.fromList $
-                   [ -- workspaces
-                     ((modm,                 xK_1     ), X.windows (onCurrentScreen W.greedyView "1"))
-                   , ((modm,                 xK_2     ), X.windows (onCurrentScreen W.greedyView "2"))
-                   , ((modm,                 xK_3     ), X.windows (onCurrentScreen W.greedyView "3"))
-                   , ((modm,                 xK_4     ), X.windows (onCurrentScreen W.greedyView "4"))
-                   , ((modm,                 xK_5     ), X.windows (onCurrentScreen W.greedyView "5"))
+      , keys =
+          let myKeys conf@(X.XConfig {modMask = modm}) = M.fromList $
+                [ -- workspaces
+                  ((modm,                 xK_1     ), X.windows (onCurrentScreen W.greedyView "1"))
+                , ((modm,                 xK_2     ), X.windows (onCurrentScreen W.greedyView "2"))
+                , ((modm,                 xK_3     ), X.windows (onCurrentScreen W.greedyView "3"))
+                , ((modm,                 xK_4     ), X.windows (onCurrentScreen W.greedyView "4"))
+                , ((modm,                 xK_5     ), X.windows (onCurrentScreen W.greedyView "5"))
 
-                     -- window handling
-                   , ((modm,                 xK_w     ), X.sendMessage $ Go U)
-                   , ((modm,                 xK_a     ), X.sendMessage $ Go L)
-                   , ((modm,                 xK_s     ), X.sendMessage $ Go D)
-                   , ((modm,                 xK_d     ), X.sendMessage $ Go R)
-                   , ((modm,                 xK_z     ), X.sendMessage $ Shrink)
-                   , ((modm,                 xK_x     ), X.sendMessage $ Expand)
-                   , ((modm,                 xK_q     ), windows W.focusUp)
-                   , ((modm,                 xK_e     ), windows W.focusDown)
-                   , ((modm,                 xK_g     ), withFocused toggleBorder)
-                   , ((modm .|. shiftMask,   xK_q     ), setLayout $ X.layoutHook conf)
+                  -- window handling
+                , ((modm,                 xK_w     ), X.sendMessage $ Go U)
+                , ((modm,                 xK_a     ), X.sendMessage $ Go L)
+                , ((modm,                 xK_s     ), X.sendMessage $ Go D)
+                , ((modm,                 xK_d     ), X.sendMessage $ Go R)
+                , ((modm,                 xK_z     ), X.sendMessage $ Shrink)
+                , ((modm,                 xK_x     ), X.sendMessage $ Expand)
+                , ((modm,                 xK_q     ), windows W.focusUp)
+                , ((modm,                 xK_e     ), windows W.focusDown)
+                , ((modm,                 xK_g     ), withFocused toggleBorder)
+                , ((modm .|. shiftMask,   xK_q     ), setLayout $ X.layoutHook conf)
 
-                   , ((modm .|. controlMask, xK_h     ), sendMessage $ pullGroup L)
-                   , ((modm .|. controlMask, xK_l     ), sendMessage $ pullGroup R)
-                   , ((modm .|. controlMask, xK_k     ), sendMessage $ pullGroup U)
-                   , ((modm .|. controlMask, xK_j     ), sendMessage $ pullGroup D)
-                   , ((modm .|. controlMask, xK_m     ), withFocused (sendMessage . MergeAll))
-                   , ((modm .|. controlMask, xK_u     ), withFocused (sendMessage . UnMerge))
-                   , ((modm .|. controlMask, xK_period), onGroup W.focusUp')
-                   , ((modm .|. controlMask, xK_comma ), onGroup W.focusDown')
+                , ((modm .|. controlMask, xK_h     ), sendMessage $ pullGroup L)
+                , ((modm .|. controlMask, xK_l     ), sendMessage $ pullGroup R)
+                , ((modm .|. controlMask, xK_k     ), sendMessage $ pullGroup U)
+                , ((modm .|. controlMask, xK_j     ), sendMessage $ pullGroup D)
+                , ((modm .|. controlMask, xK_m     ), withFocused (sendMessage . MergeAll))
+                , ((modm .|. controlMask, xK_u     ), withFocused (sendMessage . UnMerge))
+                , ((modm .|. controlMask, xK_period), onGroup W.focusUp')
+                , ((modm .|. controlMask, xK_comma ), onGroup W.focusDown')
 
-                     -- Find empty workspace
-                   , ((modm,                 xK_m     ), viewEmptyWorkspace)
-                   , ((modm .|. shiftMask,   xK_m     ), tagToEmptyWorkspace)
-                   , ((modm,                 xK_n     ), withFocused minimizeWindow)
-                   , ((modm .|. shiftMask,   xK_n     ), withLastMinimized maximizeWindowAndFocus)
-                   , ((modm,                 xK_Down  ), CWS.nextWS)
-                   , ((modm,                 xK_Up    ), CWS.prevWS)
+                  -- Find empty workspace
+                , ((modm,                 xK_m     ), viewEmptyWorkspace)
+                , ((modm .|. shiftMask,   xK_m     ), tagToEmptyWorkspace)
+                , ((modm,                 xK_n     ), withFocused minimizeWindow)
+                , ((modm .|. shiftMask,   xK_n     ), withLastMinimized maximizeWindowAndFocus)
+                , ((modm,                 xK_Down  ), CWS.nextWS)
+                , ((modm,                 xK_Up    ), CWS.prevWS)
 
-                     -- Handle floating windows.
-                   , ((modm,                 xK_r     ), withFocused $ windows . (flip W.float) centerRect)
-                   , ((modm,                 xK_t     ), withFocused $ windows . W.sink)
-                   , ((modm,                 xK_f     ), windows (actionCurrentFloating W.focusWindow))
-                   , ((modm .|. shiftMask,   xK_t     ), windows (actionCurrentFloating W.sink))
+                  -- Handle floating windows.
+                , ((modm,                 xK_r     ), withFocused $ windows . (flip W.float) centerRect)
+                , ((modm,                 xK_t     ), withFocused $ windows . W.sink)
+                , ((modm,                 xK_f     ), windows (actionCurrentFloating W.focusWindow))
+                , ((modm .|. shiftMask,   xK_t     ), windows (actionCurrentFloating W.sink))
 
-                     -- screen handling
-                   , ((modm,                 xK_space ), CWS.nextScreen)
-                   , ((modm .|. shiftMask,   xK_space ), CWS.shiftNextScreen)
+                  -- screen handling
+                , ((modm,                 xK_space ), CWS.nextScreen)
+                , ((modm .|. shiftMask,   xK_space ), CWS.shiftNextScreen)
 
-                     -- xmonad handling
-                   , ((modm,                 xK_c     ), spawn "cmus-remote -u")
-                   , ((modm,                 xK_l     ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
-                   , ((modm .|. shiftMask,   xK_l     ), broadcastMessage ReleaseResources >> restart "xmonad" True)
-                   , ((modm,                 xK_v     ), sendMessage NextLayout)
-                   , ((modm .|. shiftMask,   xK_v     ), setLayout $ X.layoutHook conf)
-                   , ((modm,                 xK_p     ), spawn "synapse")
-                   , ((modm,                 xK_o     ), spawn "~/.xinitrc")
-                     --take a screenshot of entire display
-                   --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
-                     --take a screenshot of focused window
-                   , ((modm .|. controlMask, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
-                   ]
-             in \c -> myKeys c `M.union` keys mateConfig c
-         }
+                  -- xmonad handling
+                , ((modm,                 xK_c     ), spawn "cmus-remote -u")
+                , ((modm,                 xK_l     ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
+                , ((modm .|. shiftMask,   xK_l     ), broadcastMessage ReleaseResources >> restart "xmonad" True)
+                , ((modm,                 xK_v     ), sendMessage NextLayout)
+                , ((modm .|. shiftMask,   xK_v     ), setLayout $ X.layoutHook conf)
+                , ((modm,                 xK_p     ), spawn "synapse")
+                , ((modm,                 xK_o     ), spawn "~/.xinitrc")
+                  --take a screenshot of entire display
+                --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
+                  --take a screenshot of focused window
+                , ((modm .|. controlMask, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
+                ]
+          in \c -> myKeys c `M.union` keys mateConfig c
+      }
   where
     centerRect = (W.RationalRect (1/10) (1/10) (8/10) (8/10))
 
