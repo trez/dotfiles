@@ -1,3 +1,10 @@
+--
+-- Xmonad config
+--
+-- TODO:
+--  * Only show tabs and not top bar when group of windows
+--
+
 import XMonad as X
 
 import XMonad.Config.Mate
@@ -6,6 +13,7 @@ import qualified XMonad.Actions.CycleWS as CWS
 import XMonad.Actions.NoBorders (toggleBorder)
 import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.Minimize (minimizeWindow, withLastMinimized, maximizeWindowAndFocus)
+import XMonad.Actions.Navigation2D
 
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, isInProperty)
@@ -18,6 +26,7 @@ import XMonad.Layout.Gaps           -- Space around edge of screen.
 import XMonad.Layout.SubLayouts
 
 import XMonad.Layout.Simplest
+import XMonad.Layout.Accordion
 -- import XMonad.Layout.Renamed        -- Hmm.
 
 import XMonad.Layout.SimpleDecoration
@@ -83,31 +92,33 @@ myTopBarTheme = def
 myLayout = id
     $ avoidStruts
 --    $ gaps [(U, 4), (R, 4), (L, 4), (D, 4)]
-    $ configurableNavigation (navigateColor myInactiveColor)
     $ tiled2 ||| tiledMirror |||tabs
   where
     addTopBar = noFrillsDeco shrinkText myTopBarTheme
 --    addTopBar = simpleDeco shrinkText myTopBarTheme
-    tiled2 = avoidStruts
-           $ minimize
-           $ windowNavigation
---           $ spacingRaw False (Border 4 4 4 4) True (Border 0 4 4 4) True
---           $ spacing 4
-           $ addTopBar
-           $ tiled
+    tiled2
+      = avoidStruts
+      $ minimize
+      $ windowNavigation
+      $ addTopBar
+      $ addTabs shrinkText myTabTheme
+      $ subLayout [] (Simplest ||| Accordion)
+      $ tiled
 
-    tiledMirror = avoidStruts
-                $ minimize
-                $ windowNavigation
-                $ addTopBar
-                $ Mirror tiled
+    tiledMirror
+      = avoidStruts
+      $ minimize
+      $ windowNavigation
+      $ addTopBar
+      $ addTabs shrinkText myTabTheme
+      $ subLayout [] (Simplest ||| Accordion)
+      $ Mirror tiled
 
-    tabs = avoidStruts
-         $ minimize
-         $ addTabs shrinkText myTabTheme
---         $ subLayout [] (Simplest ||| tiled2)
---         $ subTabbed
-         $ Simplest
+    tabs
+      = avoidStruts
+      $ minimize
+      $ addTabs shrinkText myTabTheme
+      $ Simplest
 
     -- default tiling algorithm partitions the screen into two panes
     tiled   = Tall nmaster delta ratio
@@ -117,11 +128,12 @@ myLayout = id
     ratio   = 1/2
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
+--    winNav = configurableNavigation (navigateColor myInactiveColor)
 
 
 main = do
     numScreens <- countScreens
-    xmonad . ewmh $ mateConfig
+    xmonad . ewmh . withNavigation2DConfig def $ mateConfig
       { modMask            = mod4Mask
       , workspaces         = withScreens 3 (map show [1..9])
       , terminal           = "termite"
@@ -162,12 +174,12 @@ main = do
                 , ((modm,   xK_g ), withFocused toggleBorder)
                 , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
-                , ((ctrled, xK_h      ), sendMessage $ pullGroup L)
-                , ((ctrled, xK_l      ), sendMessage $ pullGroup R)
-                , ((ctrled, xK_k      ), sendMessage $ pullGroup U)
-                , ((ctrled, xK_j      ), sendMessage $ pullGroup D)
+                , ((ctrled, xK_a      ), sendMessage $ pullGroup L)
+                , ((ctrled, xK_d      ), sendMessage $ pullGroup R)
+                , ((ctrled, xK_w      ), sendMessage $ pullGroup U)
+                , ((ctrled, xK_s      ), sendMessage $ pullGroup D)
                 , ((ctrled, xK_m      ), withFocused (sendMessage . MergeAll))
-                , ((ctrled, xK_u      ), withFocused (sendMessage . UnMerge))
+                , ((ctrled, xK_e      ), withFocused (sendMessage . UnMerge))
                 , ((ctrled, xK_period ), onGroup W.focusUp')
                 , ((ctrled, xK_comma  ), onGroup W.focusDown')
 
@@ -204,7 +216,7 @@ main = do
                   --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
 
                    --take a screenshot of focused window
-                , ((modm .|. controlMask, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
+                , ((ctrled, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
                 ]
                 where
                   shfted = modm .|. shiftMask
