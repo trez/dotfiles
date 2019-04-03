@@ -144,70 +144,75 @@ main = do
       , keys =
           let myKeys conf@(X.XConfig {modMask = modm}) = M.fromList $
                 [ -- workspaces
-                  ((modm,                 xK_1     ), X.windows (onCurrentScreen W.greedyView "1"))
-                , ((modm,                 xK_2     ), X.windows (onCurrentScreen W.greedyView "2"))
-                , ((modm,                 xK_3     ), X.windows (onCurrentScreen W.greedyView "3"))
-                , ((modm,                 xK_4     ), X.windows (onCurrentScreen W.greedyView "4"))
-                , ((modm,                 xK_5     ), X.windows (onCurrentScreen W.greedyView "5"))
+                  ((modm,   xK_1 ), X.windows (onCurrentScreen W.greedyView "1"))
+                , ((modm,   xK_2 ), X.windows (onCurrentScreen W.greedyView "2"))
+                , ((modm,   xK_3 ), X.windows (onCurrentScreen W.greedyView "3"))
+                , ((modm,   xK_4 ), X.windows (onCurrentScreen W.greedyView "4"))
+                , ((modm,   xK_5 ), X.windows (onCurrentScreen W.greedyView "5"))
 
                   -- window handling
-                , ((modm,                 xK_w     ), X.sendMessage $ Go U)
-                , ((modm,                 xK_a     ), X.sendMessage $ Go L)
-                , ((modm,                 xK_s     ), X.sendMessage $ Go D)
-                , ((modm,                 xK_d     ), X.sendMessage $ Go R)
-                , ((modm,                 xK_z     ), X.sendMessage $ Shrink)
-                , ((modm,                 xK_x     ), X.sendMessage $ Expand)
-                , ((modm,                 xK_q     ), windows W.focusUp)
-                , ((modm,                 xK_e     ), windows W.focusDown)
-                , ((modm,                 xK_g     ), withFocused toggleBorder)
-                , ((modm .|. shiftMask,   xK_q     ), setLayout $ X.layoutHook conf)
+                , ((modm,   xK_w ), X.sendMessage $ Go U)
+                , ((modm,   xK_a ), X.sendMessage $ Go L)
+                , ((modm,   xK_s ), X.sendMessage $ Go D)
+                , ((modm,   xK_d ), X.sendMessage $ Go R)
+                , ((modm,   xK_z ), X.sendMessage $ Shrink)
+                , ((modm,   xK_x ), X.sendMessage $ Expand)
+                , ((modm,   xK_q ), windows W.focusUp)
+                , ((modm,   xK_e ), windows W.focusDown)
+                , ((modm,   xK_g ), withFocused toggleBorder)
+                , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
-                , ((modm .|. controlMask, xK_h     ), sendMessage $ pullGroup L)
-                , ((modm .|. controlMask, xK_l     ), sendMessage $ pullGroup R)
-                , ((modm .|. controlMask, xK_k     ), sendMessage $ pullGroup U)
-                , ((modm .|. controlMask, xK_j     ), sendMessage $ pullGroup D)
-                , ((modm .|. controlMask, xK_m     ), withFocused (sendMessage . MergeAll))
-                , ((modm .|. controlMask, xK_u     ), withFocused (sendMessage . UnMerge))
-                , ((modm .|. controlMask, xK_period), onGroup W.focusUp')
-                , ((modm .|. controlMask, xK_comma ), onGroup W.focusDown')
+                , ((ctrled, xK_h      ), sendMessage $ pullGroup L)
+                , ((ctrled, xK_l      ), sendMessage $ pullGroup R)
+                , ((ctrled, xK_k      ), sendMessage $ pullGroup U)
+                , ((ctrled, xK_j      ), sendMessage $ pullGroup D)
+                , ((ctrled, xK_m      ), withFocused (sendMessage . MergeAll))
+                , ((ctrled, xK_u      ), withFocused (sendMessage . UnMerge))
+                , ((ctrled, xK_period ), onGroup W.focusUp')
+                , ((ctrled, xK_comma  ), onGroup W.focusDown')
 
                   -- Find empty workspace
-                , ((modm,                 xK_m     ), viewEmptyWorkspace)
-                , ((modm .|. shiftMask,   xK_m     ), tagToEmptyWorkspace)
-                , ((modm,                 xK_n     ), withFocused minimizeWindow)
-                , ((modm .|. shiftMask,   xK_n     ), withLastMinimized maximizeWindowAndFocus)
-                , ((modm,                 xK_Down  ), CWS.nextWS)
-                , ((modm,                 xK_Up    ), CWS.prevWS)
+                , ((modm,   xK_m    ), viewEmptyWorkspace)
+                , ((shfted, xK_m    ), tagToEmptyWorkspace)
+                , ((modm,   xK_n    ), withFocused minimizeWindow)
+                , ((shfted, xK_n    ), withLastMinimized maximizeWindowAndFocus)
+                , ((modm,   xK_Down ), CWS.nextWS)
+                , ((modm,   xK_Up   ), CWS.prevWS)
 
                   -- Handle floating windows.
-                , ((modm,                 xK_r     ), withFocused $ windows . (flip W.float) centerRect)
-                , ((modm,                 xK_t     ), withFocused $ windows . W.sink)
-                , ((modm,                 xK_f     ), windows (actionCurrentFloating W.focusWindow))
-                , ((modm .|. shiftMask,   xK_t     ), windows (actionCurrentFloating W.sink))
+                , ((modm,   xK_r ), withFocused $ windows . (flip W.float) centerRect)
+                , ((modm,   xK_t ), withFocused $ windows . W.sink)
+                , ((modm,   xK_f ), windows (actionCurrentFloating W.focusWindow))
+                , ((shfted, xK_t ), windows (actionCurrentFloating W.sink))
 
                   -- screen handling
-                , ((modm,                 xK_space ), CWS.nextScreen)
-                , ((modm,                 xK_BackSpace ), CWS.prevScreen)
-                , ((modm .|. shiftMask,   xK_space ), CWS.shiftNextScreen)
-                , ((modm .|. shiftMask,   xK_BackSpace ), CWS.shiftPrevScreen)
+                , ((modm,   xK_space     ), CWS.nextScreen)
+                , ((modm,   xK_BackSpace ), CWS.prevScreen)
+                , ((shfted, xK_space     ), CWS.shiftNextScreen)
+                , ((shfted, xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
-                , ((modm,                 xK_c     ), spawn "cmus-remote -u")
-                , ((modm,                 xK_l     ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
-                , ((modm .|. shiftMask,   xK_l     ), broadcastMessage ReleaseResources >> restart "xmonad" True)
-                , ((modm,                 xK_v     ), sendMessage NextLayout)
-                , ((modm .|. shiftMask,   xK_v     ), setLayout $ X.layoutHook conf)
-                , ((modm,                 xK_p     ), spawn "synapse")
-                , ((modm,                 xK_o     ), spawn "~/.xinitrc")
+                , ((modm,   xK_c ), spawn "cmus-remote -u")
+                , ((modm,   xK_l ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
+                , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
+                , ((modm,   xK_v ), sendMessage NextLayout)
+                , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
+                , ((modm,   xK_p ), spawn "synapse")
+                , ((modm,   xK_o ), spawn "~/.xinitrc")
+
                   --take a screenshot of entire display
-                --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
-                  --take a screenshot of focused window
+                  --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
+
+                   --take a screenshot of focused window
                 , ((modm .|. controlMask, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
                 ]
+                where
+                  shfted = modm .|. shiftMask
+                  ctrled = modm .|. controlMask
+                  centerRect = (W.RationalRect (1/10) (1/10) (8/10) (8/10))
           in \c -> myKeys c `M.union` keys mateConfig c
       }
-  where
-    centerRect = (W.RationalRect (1/10) (1/10) (8/10) (8/10))
+
 
 actionCurrentFloating :: (Eq s, Eq a, Eq i, Ord a) => (a -> W.StackSet i l a s sd -> W.StackSet i l a s sd) -> W.StackSet i l a s sd -> W.StackSet i l a s sd
 actionCurrentFloating f s = findFloatingInCurrentStack (W.index s) (W.floating s)
