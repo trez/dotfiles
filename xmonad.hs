@@ -123,7 +123,7 @@ main = do
     numScreens <- countScreens
     xmonad . ewmh $ mateConfig
       { modMask            = mod4Mask
-      , workspaces         = withScreens numScreens (map show [1..9])
+      , workspaces         = withScreens 3 (map show [1..9])
       , terminal           = "termite"
       , focusFollowsMouse  = False
       , handleEventHook    = fullscreenEventHook
@@ -187,7 +187,9 @@ main = do
 
                   -- screen handling
                 , ((modm,                 xK_space ), CWS.nextScreen)
+                , ((modm,                 xK_BackSpace ), CWS.prevScreen)
                 , ((modm .|. shiftMask,   xK_space ), CWS.shiftNextScreen)
+                , ((modm .|. shiftMask,   xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
                 , ((modm,                 xK_c     ), spawn "cmus-remote -u")
