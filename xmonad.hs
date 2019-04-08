@@ -87,16 +87,13 @@ myTopBarTheme = def
     , decoHeight          = 20
     }
 
--- myLayout = minimize tiled ||| tabs -- tabbed shrinkText myTabTheme
--- ||| minimize(Mirror tiled) ||| minimize Full
 myLayout = id
     $ avoidStruts
---    $ gaps [(U, 4), (R, 4), (L, 4), (D, 4)]
-    $ tiled2 ||| tiledMirror |||tabs
+    $ tiledLayout ||| tiledMirrorLayout ||| tabsLayout
   where
     addTopBar = noFrillsDeco shrinkText myTopBarTheme
---    addTopBar = simpleDeco shrinkText myTopBarTheme
-    tiled2
+
+    tiledLayout
       = avoidStruts
       $ minimize
       $ windowNavigation
@@ -105,7 +102,7 @@ myLayout = id
       $ subLayout [] (Simplest ||| Accordion)
       $ tiled
 
-    tiledMirror
+    tiledMirrorLayout
       = avoidStruts
       $ minimize
       $ windowNavigation
@@ -114,7 +111,7 @@ myLayout = id
       $ subLayout [] (Simplest ||| Accordion)
       $ Mirror tiled
 
-    tabs
+    tabsLayout
       = avoidStruts
       $ minimize
       $ addTabs shrinkText myTabTheme
@@ -128,7 +125,6 @@ myLayout = id
     ratio   = 1/2
     -- Percent of screen to increment by when resizing panes
     delta   = 3/100
---    winNav = configurableNavigation (navigateColor myInactiveColor)
 
 
 main = do
@@ -154,24 +150,24 @@ main = do
                ]
 
       , keys =
-          let myKeys conf@(X.XConfig {modMask = modm}) = M.fromList $
+          let myKeys conf@(X.XConfig {modMask = modkey}) = M.fromList $
                 [ -- workspaces
-                  ((modm,   xK_1 ), X.windows (onCurrentScreen W.greedyView "1"))
-                , ((modm,   xK_2 ), X.windows (onCurrentScreen W.greedyView "2"))
-                , ((modm,   xK_3 ), X.windows (onCurrentScreen W.greedyView "3"))
-                , ((modm,   xK_4 ), X.windows (onCurrentScreen W.greedyView "4"))
-                , ((modm,   xK_5 ), X.windows (onCurrentScreen W.greedyView "5"))
+                  ((modkey, xK_1 ), X.windows (onCurrentScreen W.greedyView "1"))
+                , ((modkey, xK_2 ), X.windows (onCurrentScreen W.greedyView "2"))
+                , ((modkey, xK_3 ), X.windows (onCurrentScreen W.greedyView "3"))
+                , ((modkey, xK_4 ), X.windows (onCurrentScreen W.greedyView "4"))
+                , ((modkey, xK_5 ), X.windows (onCurrentScreen W.greedyView "5"))
 
                   -- window handling
-                , ((modm,   xK_w ), X.sendMessage $ Go U)
-                , ((modm,   xK_a ), X.sendMessage $ Go L)
-                , ((modm,   xK_s ), X.sendMessage $ Go D)
-                , ((modm,   xK_d ), X.sendMessage $ Go R)
-                , ((modm,   xK_z ), X.sendMessage $ Shrink)
-                , ((modm,   xK_x ), X.sendMessage $ Expand)
-                , ((modm,   xK_q ), windows W.focusUp)
-                , ((modm,   xK_e ), windows W.focusDown)
-                , ((modm,   xK_g ), withFocused toggleBorder)
+                , ((modkey, xK_w ), X.sendMessage $ Go U)
+                , ((modkey, xK_a ), X.sendMessage $ Go L)
+                , ((modkey, xK_s ), X.sendMessage $ Go D)
+                , ((modkey, xK_d ), X.sendMessage $ Go R)
+                , ((modkey, xK_z ), X.sendMessage $ Shrink)
+                , ((modkey, xK_x ), X.sendMessage $ Expand)
+                , ((modkey, xK_q ), windows W.focusUp)
+                , ((modkey, xK_e ), windows W.focusDown)
+                , ((modkey, xK_g ), withFocused toggleBorder)
                 , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
                 , ((ctrled, xK_a      ), sendMessage $ pullGroup L)
@@ -184,43 +180,42 @@ main = do
                 , ((ctrled, xK_comma  ), onGroup W.focusDown')
 
                   -- Find empty workspace
-                , ((modm,   xK_m    ), viewEmptyWorkspace)
+                , ((modkey, xK_m    ), viewEmptyWorkspace)
                 , ((shfted, xK_m    ), tagToEmptyWorkspace)
-                , ((modm,   xK_n    ), withFocused minimizeWindow)
+                , ((modkey, xK_n    ), withFocused minimizeWindow)
                 , ((shfted, xK_n    ), withLastMinimized maximizeWindowAndFocus)
-                , ((modm,   xK_Down ), CWS.nextWS)
-                , ((modm,   xK_Up   ), CWS.prevWS)
+                , ((modkey, xK_Down ), CWS.nextWS)
+                , ((modkey, xK_Up   ), CWS.prevWS)
 
                   -- Handle floating windows.
-                , ((modm,   xK_r ), withFocused $ windows . (flip W.float) centerRect)
-                , ((modm,   xK_t ), withFocused $ windows . W.sink)
-                , ((modm,   xK_f ), windows (actionCurrentFloating W.focusWindow))
+                , ((modkey, xK_r ), withFocused $ windows . (flip W.float) centerRect)
+                , ((modkey, xK_t ), withFocused $ windows . W.sink)
+                , ((modkey, xK_f ), windows (actionCurrentFloating W.focusWindow))
                 , ((shfted, xK_t ), windows (actionCurrentFloating W.sink))
 
                   -- screen handling
-                , ((modm,   xK_space     ), CWS.nextScreen)
-                , ((modm,   xK_BackSpace ), CWS.prevScreen)
+                , ((modkey, xK_space     ), CWS.nextScreen)
+                , ((modkey, xK_BackSpace ), CWS.prevScreen)
                 , ((shfted, xK_space     ), CWS.shiftNextScreen)
                 , ((shfted, xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
-                , ((modm,   xK_c ), spawn "cmus-remote -u")
-                , ((modm,   xK_l ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
+                , ((modkey, xK_c ), spawn "cmus-remote -u")
+                , ((modkey, xK_l ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
                 , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
-                , ((modm,   xK_v ), sendMessage NextLayout)
+                , ((modkey, xK_v ), sendMessage NextLayout)
                 , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
-                , ((modm,   xK_p ), spawn "synapse")
-                , ((modm,   xK_o ), spawn "~/.xinitrc")
+                , ((modkey, xK_p ), spawn "synapse")
+                , ((modkey, xK_o ), spawn "~/.xinitrc")
 
-                  --take a screenshot of entire display
-                  --, ((modm , xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1")
-
-                   --take a screenshot of focused window
-                , ((ctrled, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1-u")
+                  --take a screenshot of entire display.
+                , ((modkey, xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1 -e 'mv $f ~/Screenshots'")
+                  --take a screenshot of focused window.
+                , ((ctrled, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1 -u -e 'mv $f ~/Screenshots'")
                 ]
                 where
-                  shfted = modm .|. shiftMask
-                  ctrled = modm .|. controlMask
+                  shfted = modkey .|. shiftMask
+                  ctrled = modkey .|. controlMask
                   centerRect = (W.RationalRect (1/10) (1/10) (8/10) (8/10))
           in \c -> myKeys c `M.union` keys mateConfig c
       }
