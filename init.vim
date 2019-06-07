@@ -61,6 +61,7 @@ Plug 'davidhalter/jedi-vim'  " Python autocompletion
 Plug 'majutsushi/tagbar' " Ctags browser tool.
 Plug 'robbles/logstash.vim'
 Plug 'rbgrouleff/bclose.vim' " Delete buffer without effecting window setup.
+Plug 'nvie/vim-flake8' " pylinting
 
 function! DoRemote(arg)
   UpdateRemotePlugins
