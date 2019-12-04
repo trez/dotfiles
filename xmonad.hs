@@ -200,12 +200,14 @@ main = do
                 , ((shfted, xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
-                , ((modkey, xK_c ), spawn "cmus-remote -u")
-                , ((modkey, xK_l ), spawn "amixer set Master mute" >> spawn "mate-screensaver-command -l")
+                , ((modkey, xK_c ), soundMute )
+                , ((shfted, xK_c ), soundUnmute )
+                , ((modkey, xK_l ), soundMute >> spawn "mate-screensaver-command -l")
                 , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
                 , ((modkey, xK_v ), sendMessage NextLayout)
                 , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
                 , ((modkey, xK_p ), spawn "synapse")
+                , ((shfted, xK_p ), spawn "termite -e 'nvim -c \":VimwikiIndex\"'")
                 , ((modkey, xK_o ), spawn "~/.xinitrc")
 
                   --take a screenshot of entire display.
@@ -220,6 +222,9 @@ main = do
           in \c -> myKeys c `M.union` keys mateConfig c
       }
 
+soundMute = spawn "pactl set-sink-mute 0 1"
+soundUnmute = spawn "pactl set-sink-mute 0 0"
+-- soundToggle = spawn "pactl set-sink-mute 0 toggle"
 
 actionCurrentFloating :: (Eq s, Eq a, Eq i, Ord a) => (a -> W.StackSet i l a s sd -> W.StackSet i l a s sd) -> W.StackSet i l a s sd -> W.StackSet i l a s sd
 actionCurrentFloating f s = findFloatingInCurrentStack (W.index s) (W.floating s)
