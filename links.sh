@@ -22,6 +22,7 @@ ln -fsT $SCRIPT_DIR/xinitrc ~/.xinitrc
 ln -fsT $SCRIPT_DIR/curlrc ~/.curlrc
 ln -fsT $SCRIPT_DIR/fusuma.config.yml ~/.config/fusuma/config.yml
 ln -fsT $SCRIPT_DIR/tmux.conf ~/.tmux.conf
+ln -fsT $SCRIPT_DIR/screenrc ~/.screenrc
 
 # Needs to be an executable by xinit.
 chmod +x $SCRIPT_DIR/xinitrc
