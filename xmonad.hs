@@ -14,6 +14,7 @@ import XMonad.Actions.NoBorders (toggleBorder)
 import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.Minimize (minimizeWindow, withLastMinimized, maximizeWindowAndFocus)
 import XMonad.Actions.Navigation2D
+import XMonad.Actions.GridSelect (gridselectWindow, bringSelected, defaultGSConfig, GSConfig)
 
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, isInProperty)
@@ -27,6 +28,7 @@ import XMonad.Layout.SubLayouts
 
 import XMonad.Layout.Simplest
 import XMonad.Layout.Accordion
+import XMonad.Layout.ThreeColumns  -- Three columns make better sense for a wide screen.
 -- import XMonad.Layout.Renamed        -- Hmm.
 
 import XMonad.Layout.SimpleDecoration
@@ -61,8 +63,8 @@ colorGreen     = "#66ff66"
 colorGreenAlt  = "#558965"
 
 -- monokai-ish colors.
-myActiveColor = "#f4bf75"
-myInactiveColor = "#75715e"
+myInactiveColor = "#100e23"
+myActiveColor = "#91ddff"
 
 myFont = "-*-terminus-medium-*-*-*-*-160-*-*-*-*-*-*"
 
@@ -118,7 +120,7 @@ myLayout = id
       $ Simplest
 
     -- default tiling algorithm partitions the screen into two panes
-    tiled   = Tall nmaster delta ratio
+    tiled = ThreeColMid 1 (3/100) (1/2)
     -- The default number of windows in the master pane
     nmaster = 1
     -- Default proportion of screen occupied by master pane
@@ -128,14 +130,15 @@ myLayout = id
 
 
 main = do
-    numScreens <- countScreens
+--    numScreens <- countScreens
+    let numScreens = 2
     xmonad . ewmh . withNavigation2DConfig def $ mateConfig
       { modMask            = mod4Mask
-      , workspaces         = withScreens 3 (map show [1..9])
+      , workspaces         = withScreens numScreens (map show [1..9])
       , terminal           = "termite"
       , focusFollowsMouse  = False
       , handleEventHook    = fullscreenEventHook
-      , borderWidth        = 1
+      , borderWidth        = 2
       , normalBorderColor  = myInactiveColor
       , focusedBorderColor = myActiveColor
       , layoutHook         = myLayout
@@ -167,7 +170,8 @@ main = do
                 , ((modkey, xK_x ), X.sendMessage $ Expand)
                 , ((modkey, xK_q ), windows W.focusUp)
                 , ((modkey, xK_e ), windows W.focusDown)
-                , ((modkey, xK_g ), withFocused toggleBorder)
+             --   , ((modkey, xK_g ), withFocused toggleBorder)
+                , ((modkey, xK_g ), bringSelected defaultGSConfig)
                 , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
                 , ((ctrled, xK_a      ), sendMessage $ pullGroup L)
@@ -200,15 +204,13 @@ main = do
                 , ((shfted, xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
-                , ((modkey, xK_c ), soundMute )
-                , ((shfted, xK_c ), soundUnmute )
                 , ((modkey, xK_l ), soundMute >> spawn "mate-screensaver-command -l")
                 , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
                 , ((modkey, xK_v ), sendMessage NextLayout)
                 , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
                 , ((modkey, xK_p ), spawn "synapse")
                 , ((shfted, xK_p ), spawn "termite -e 'nvim -c \":VimwikiIndex\"'")
-                , ((modkey, xK_o ), spawn "~/.xinitrc")
+                , ((ctrled, xK_p ), spawn "termite -e 'bash -c \"TERM=xterm-256color ssh worker\"'")
 
                   --take a screenshot of entire display.
                 , ((modkey, xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1 -e 'mv $f ~/Screenshots'")
@@ -219,12 +221,9 @@ main = do
                   shfted = modkey .|. shiftMask
                   ctrled = modkey .|. controlMask
                   centerRect = (W.RationalRect (1/10) (1/10) (8/10) (8/10))
+
           in \c -> myKeys c `M.union` keys mateConfig c
       }
-
-soundMute = spawn "pactl set-sink-mute 0 1"
-soundUnmute = spawn "pactl set-sink-mute 0 0"
--- soundToggle = spawn "pactl set-sink-mute 0 toggle"
 
 actionCurrentFloating :: (Eq s, Eq a, Eq i, Ord a) => (a -> W.StackSet i l a s sd -> W.StackSet i l a s sd) -> W.StackSet i l a s sd -> W.StackSet i l a s sd
 actionCurrentFloating f s = findFloatingInCurrentStack (W.index s) (W.floating s)
