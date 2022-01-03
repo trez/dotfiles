@@ -14,7 +14,7 @@ import XMonad.Actions.NoBorders (toggleBorder)
 import XMonad.Actions.FindEmptyWorkspace (viewEmptyWorkspace, tagToEmptyWorkspace)
 import XMonad.Actions.Minimize (minimizeWindow, withLastMinimized, maximizeWindowAndFocus)
 import XMonad.Actions.Navigation2D
-import XMonad.Actions.GridSelect (gridselectWindow, bringSelected, defaultGSConfig, GSConfig)
+import XMonad.Actions.GridSelect
 
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, isInProperty)
@@ -88,6 +88,9 @@ myTopBarTheme = def
     , inactiveTextColor   = myActiveColor
     , decoHeight          = 20
     }
+
+gsconfig = def { gs_cellheight = 30, gs_cellwidth = 100 }
+
 
 myLayout = id
     $ avoidStruts
@@ -171,7 +174,7 @@ main = do
                 , ((modkey, xK_q ), windows W.focusUp)
                 , ((modkey, xK_e ), windows W.focusDown)
              --   , ((modkey, xK_g ), withFocused toggleBorder)
-                , ((modkey, xK_g ), bringSelected defaultGSConfig)
+                , ((modkey, xK_g ), bringSelected gsconfig)
                 , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
                 , ((ctrled, xK_a      ), sendMessage $ pullGroup L)
@@ -204,7 +207,7 @@ main = do
                 , ((shfted, xK_BackSpace ), CWS.shiftPrevScreen)
 
                   -- xmonad handling
-                , ((modkey, xK_l ), soundMute >> spawn "mate-screensaver-command -l")
+                , ((modkey, xK_l ), spawn "mate-screensaver-command -l")
                 , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
                 , ((modkey, xK_v ), sendMessage NextLayout)
                 , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
@@ -216,6 +219,8 @@ main = do
                 , ((modkey, xK_Print ), spawn "scrot screen_%Y-%m-%d-%H-%M-%S.png -d 1 -e 'mv $f ~/Screenshots'")
                   --take a screenshot of focused window.
                 , ((ctrled, xK_Print ), spawn "scrot window_%Y-%m-%d-%H-%M-%S.png -d 1 -u -e 'mv $f ~/Screenshots'")
+                , ((modkey, xK_o     ), spawn "passmenu --type")
+                , ((shfted, xK_o     ), spawn "sudo_pass_open")
                 ]
                 where
                   shfted = modkey .|. shiftMask
