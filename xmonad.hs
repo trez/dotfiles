@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 --
 -- Xmonad config
 --
@@ -18,25 +19,18 @@ import XMonad.Actions.GridSelect
 
 import XMonad.Hooks.EwmhDesktops (ewmh)
 import XMonad.Hooks.ManageHelpers (isFullscreen, doFullFloat, isInProperty)
-import XMonad.Hooks.ManageDebug
 import XMonad.Hooks.ManageDocks (avoidStruts)
 
 import XMonad.Layout.Spacing        -- Space around windows.
 import XMonad.Layout.Gaps           -- Space around edge of screen.
-
 import XMonad.Layout.SubLayouts
-
 import XMonad.Layout.Simplest
 import XMonad.Layout.Accordion
 import XMonad.Layout.ThreeColumns  -- Three columns make better sense for a wide screen.
--- import XMonad.Layout.Renamed        -- Hmm.
-
 import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.NoFrillsDecoration (noFrillsDeco)
 import XMonad.Layout.Tabbed (addTabs, tabbed)
--- import XMonad.Layout.ResizableTile
 import XMonad.Layout.Fullscreen (fullscreenEventHook)
--- import XMonad.Layout.LayoutHints
 import XMonad.Layout.WindowNavigation (Direction2D(..), Navigate(..) , configurableNavigation, navigateColor, windowNavigation)
 import XMonad.Layout.IndependentScreens (onCurrentScreen, withScreens, countScreens)
 import XMonad.Layout.Minimize (minimize)
@@ -93,48 +87,31 @@ gsconfig = def { gs_cellheight = 30, gs_cellwidth = 100 }
 
 
 myLayout = id
-    $ avoidStruts
-    $ tiledLayout ||| tiledMirrorLayout ||| tabsLayout
+    $ tiledLayout threeColumn ||| tiledLayout (Mirror threeColumn) ||| tiledLayout twoColumn ||| tiledLayout (Mirror twoColumn) ||| tabsLayout
   where
     addTopBar = noFrillsDeco shrinkText myTopBarTheme
-
-    tiledLayout
-      = avoidStruts
-      $ minimize
-      $ windowNavigation
-      $ addTopBar
-      $ addTabs shrinkText myTabTheme
-      $ subLayout [] (Simplest ||| Accordion)
-      $ tiled
-
-    tiledMirrorLayout
-      = avoidStruts
-      $ minimize
-      $ windowNavigation
-      $ addTopBar
-      $ addTabs shrinkText myTabTheme
-      $ subLayout [] (Simplest ||| Accordion)
-      $ Mirror tiled
-
     tabsLayout
       = avoidStruts
       $ minimize
       $ addTabs shrinkText myTabTheme
       $ Simplest
 
-    -- default tiling algorithm partitions the screen into two panes
-    tiled = ThreeColMid 1 (3/100) (1/2)
-    -- The default number of windows in the master pane
-    nmaster = 1
-    -- Default proportion of screen occupied by master pane
-    ratio   = 1/2
-    -- Percent of screen to increment by when resizing panes
-    delta   = 3/100
+    tiledLayout w
+      = avoidStruts
+      $ minimize
+      $ windowNavigation
+      $ addTopBar
+      $ addTabs shrinkText myTabTheme
+      $ subLayout [] (Simplest ||| Accordion)
+      $ w
+
+    twoColumn   = Tall 1 (3/100) (1/2)
+    threeColumn = ThreeColMid 1 (3/100) (1/2)
 
 
 main = do
---    numScreens <- countScreens
-    let numScreens = 2
+    numScreens <- countScreens
+    -- let numScreens = 2
     xmonad . ewmh . withNavigation2DConfig def $ mateConfig
       { modMask            = mod4Mask
       , workspaces         = withScreens numScreens (map show [1..9])
