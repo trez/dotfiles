@@ -83,7 +83,12 @@ myTopBarTheme = def
     , decoHeight          = 20
     }
 
-gsconfig = def { gs_cellheight = 30, gs_cellwidth = 100 }
+-- Grid configuration
+gridConfig = def { gs_cellheight = 30, gs_cellwidth = 100 }
+
+-- 
+scratchConfig = undefined
+
 
 
 myLayout = id
@@ -126,10 +131,11 @@ main = do
           let isSplash = isInProperty "_NET_WM_WINDOW_TYPE"
                                       "_NET_WM_WINDOW_TYPE_SPLASH"
           in manageHook mateConfig <+> composeAll
-               [ resource  =? "Do"  --> doIgnore
-               , className =? "Do"  --> doIgnore
-               , isFullscreen       --> doFullFloat
-               , isSplash           --> doIgnore
+               [ resource  =? "Do"    --> doIgnore
+               , className =? "Do"    --> doIgnore
+               , className =? "Guake" --> doFloat
+               , isFullscreen         --> doFullFloat
+               , isSplash             --> doIgnore
                ]
 
       , keys =
@@ -151,7 +157,7 @@ main = do
                 , ((modkey, xK_q ), windows W.focusUp)
                 , ((modkey, xK_e ), windows W.focusDown)
              --   , ((modkey, xK_g ), withFocused toggleBorder)
-                , ((modkey, xK_g ), bringSelected gsconfig)
+                , ((modkey, xK_g ), bringSelected gridConfig)
                 , ((shfted, xK_q ), setLayout $ X.layoutHook conf)
 
                 , ((ctrled, xK_a      ), sendMessage $ pullGroup L)
@@ -188,7 +194,8 @@ main = do
                 , ((shfted, xK_l ), broadcastMessage ReleaseResources >> restart "xmonad" True)
                 , ((modkey, xK_v ), sendMessage NextLayout)
                 , ((shfted, xK_v ), setLayout $ X.layoutHook conf)
-                , ((modkey, xK_p ), spawn "synapse")
+                , ((modkey, xK_p ), spawn "dmenu_run")
+
                 , ((shfted, xK_p ), spawn "termite -e 'nvim -c \":VimwikiIndex\"'")
                 , ((ctrled, xK_p ), spawn "termite -e 'bash -c \"TERM=xterm-256color ssh worker\"'")
 
