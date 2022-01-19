@@ -1,2 +1,23 @@
+# Switch region with mouse action.
+mousetrack on
+defmousetrack on
+
+# Switch region using vim bindings.
+bind h focus left
+bind j focus down
+bind k focus up
+bind l focus right
+bind t focus top
+bind b focus bottom
+
+# disable screen freezing, fixed by ctrl-a q, but anyways.
+bind s 
+
+# fix for not needing double ESC when running vim inside a screen session.
+maptimeout 10
+
+# status bar.
 caption always "%{= kw}%-w%{= BW}%n %t%{-}%+w %-= @%H - %LD %d %LM - %c"
+
+# use ctrl-b instead of ctrl-a.
 escape ^Bb
