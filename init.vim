@@ -1,6 +1,6 @@
 
 if has('nvim') || has('termguicolors')
-  set termguicolors
+  " set termguicolors
 endif
 
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
