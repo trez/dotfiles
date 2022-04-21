@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Spawn a terminal with project setup via workmaster based on dmenu selection.
+
+WM="workmaster"
+PROJECT=$($WM -q | dmenu)
+if [[ $? -eq 0 ]] && [[ "$PROJECT" != "" ]]; then
+    termite --title="$PROJECT" -e "bash -c 'TERM=xterm-256color $WM $PROJECT attach'"
+fi

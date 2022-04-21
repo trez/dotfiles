@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# Spawn a terminal and log into host based on dmenu selection from ~/.ssh/config
+
+SSH_HOST=$(cat ~/.ssh/config | grep ^Host | awk '{ print $2  }' | dmenu)
+if [[ $? -eq 0 ]] && [[ "$SSH_HOST" != "" ]] && grep -xq "^Host $SSH_HOST" ~/.ssh/config; then
+    termite -e "bash -c 'TERM=xterm-256color ssh $SSH_HOST'"
+fi
